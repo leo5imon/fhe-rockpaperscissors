@@ -3,10 +3,11 @@ import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { WagmiProvider } from "wagmi";
 import { defineChain } from "viem";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { FhenixClient } from 'fhenixjs';
 import Dapp from "./components/Dapp";
 
-const fhenix_testnet = defineChain({
+require('dotenv').config();
+
+const fhenixTestnet = defineChain({
   id: 42069,
   name: "Fhenix Frontier",
   nativeCurrency: { name: "tFHE", symbol: "tFHE", decimals: 18 },
@@ -14,19 +15,21 @@ const fhenix_testnet = defineChain({
     default: { http: ["https://api.testnet.fhenix.zone:7747"] },
   },
   blockExplorers: {
-    default: { name: "Blockscout", url: "https://explorer.testnet.fhenix.zone" },
-  }
+    default: {
+      name: "Blockscout",
+      url: "https://explorer.testnet.fhenix.zone",
+    },
+  },
 });
 
 const config = getDefaultConfig({
   appName: "fhe-rockpaperscissors",
-  projectId: "YOUR_PROJECT_ID",
-  chains: [fhenix_testnet],
-  ssr: true
+  projectId: process.env.NEXT_PUBLIC_RAINBOW_PROJECT_ID,
+  chains: [fhenixTestnet],
+  ssr: true,
 });
 
 const queryClient = new QueryClient();
-const fhenixClient = new FhenixClient({provider});
 
 export default function Home() {
   return (
