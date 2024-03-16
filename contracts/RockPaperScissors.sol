@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: BSD-3-Clause-Clear
 pragma solidity >=0.8.13 <0.9.0;
 
+import "@fhenixprotocol/contracts/FHE.sol";
+
 contract RockPaperScissors {
-    enum Move { None, Rock, Paper, Scissors }
     struct Game {
         address player1;
         address player2;
-        Move player1Move;
-        Move player2Move;
-        uint256 betAmount;
+        euint8 player1Move; // 0 = None, 1 = Rock, 2 = Paper, 3 = Scissors
+        euint8 player2Move;
         bool isGameEnded;
         address winner;
     }
@@ -16,76 +16,72 @@ contract RockPaperScissors {
     uint256 public gameId;
     mapping(uint256 => Game) public games;
 
-    event GameCreated(uint256 gameId, address player1, uint256 betAmount);
+    event GameCreated(uint256 gameId, address player1);
     event PlayerJoined(uint256 gameId, address player2);
-    event MoveMade(uint256 gameId, address player, Move move);
+    event MoveMade(uint256 gameId, address player, euint8 move);
     event GameEnded(uint256 gameId, address winner);
 
-    function createGame() external payable returns (uint256) {
-        require(msg.value > 0, "Bet amount must be greater than 0");
-
+    function createGame() external returns (uint256) {
         games[gameId] = Game({
             player1: msg.sender,
             player2: address(0),
-            player1Move: Move.None,
-            player2Move: Move.None,
-            betAmount: msg.value,
+            player1Move: FHE.asEuint8(0),
+            player2Move: FHE.asEuint8(0),
             isGameEnded: false,
             winner: address(0)
         });
 
-        emit GameCreated(gameId, msg.sender, msg.value);
-        return gameId++;
+        emit GameCreated(gameId, msg.sender);
+        uint256 createdGameId = gameId;
+        gameId++;
+        return createdGameId;
     }
 
-    function joinGame(uint256 _gameId) external payable {
+    function joinGame(uint256 _gameId) external {
         Game storage game = games[_gameId];
 
         require(msg.sender != game.player1, "Player cannot join their own game");
         require(game.player2 == address(0), "Game already has two players");
-        require(msg.value == game.betAmount, "Bet amount must match");
 
         game.player2 = msg.sender;
         emit PlayerJoined(_gameId, msg.sender);
     }
 
-    function makeMove(uint256 _gameId, Move _move) external {
+    function makeMove(uint256 _gameId, inEuint8 calldata encryptedMove) public {
         Game storage game = games[_gameId];
 
-        require(_move != Move.None, "Invalid move");
         require(!game.isGameEnded, "Game has already ended");
+        euint8 move = FHE.asEuint8(encryptedMove);
 
         if (msg.sender == game.player1) {
-            require(game.player1Move == Move.None, "Move already made");
-            game.player1Move = _move;
+            game.player1Move = move;
         } else if (msg.sender == game.player2) {
-            require(game.player2Move == Move.None, "Move already made");
-            game.player2Move = _move;
+            game.player2Move = move;
         } else {
             revert("Player not part of this game");
         }
 
-        emit MoveMade(_gameId, msg.sender, _move);
-
-        if (game.player1Move != Move.None && game.player2Move != Move.None) {
-            decideWinner(_gameId);
-        }
+        emit MoveMade(_gameId, msg.sender, move);
+        decideWinner(_gameId);
     }
 
     function decideWinner(uint256 _gameId) internal {
         Game storage game = games[_gameId];
-        if (game.player1Move == game.player2Move) {
+
+        uint8 player1MoveDecrypted = FHE.decrypt(game.player1Move);
+        uint8 player2MoveDecrypted = FHE.decrypt(game.player2Move);
+
+        if (player1MoveDecrypted == player2MoveDecrypted) {
             game.winner = address(0);
-        } else if ((game.player1Move == Move.Rock && game.player2Move == Move.Scissors) ||
-                   (game.player1Move == Move.Paper && game.player2Move == Move.Rock) ||
-                   (game.player1Move == Move.Scissors && game.player2Move == Move.Paper)) {
+        } else if ((player1MoveDecrypted == 1 && player2MoveDecrypted == 3) || 
+                   (player1MoveDecrypted == 2 && player2MoveDecrypted == 1) || 
+                   (player1MoveDecrypted == 3 && player2MoveDecrypted == 2)) {
             game.winner = game.player1;
         } else {
             game.winner = game.player2;
         }
 
         game.isGameEnded = true;
-        payable(game.winner).transfer(address(this).balance);
         emit GameEnded(_gameId, game.winner);
     }
 
