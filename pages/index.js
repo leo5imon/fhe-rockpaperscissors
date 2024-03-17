@@ -4,9 +4,9 @@ import { WagmiProvider } from "wagmi";
 import { defineChain } from "viem";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import Dapp from "./components/Dapp";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
 
-require('dotenv').config();
+require("dotenv").config();
 
 const fhenixTestnet = defineChain({
   id: 42069,

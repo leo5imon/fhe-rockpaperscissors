@@ -1,0 +1,26 @@
+.fullHeight {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .topBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .rightSection {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  .actionButtons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  

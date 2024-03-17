@@ -1,6 +1,6 @@
-import { FallbackProvider, JsonRpcProvider } from 'ethers';
-import { useMemo } from 'react';
-import { useClient } from 'wagmi';
+import { FallbackProvider, JsonRpcProvider } from "ethers";
+import { useMemo } from "react";
+import { useClient } from "wagmi";
 
 export function clientToProvider(client) {
   const { chain, transport } = client;
@@ -9,9 +9,9 @@ export function clientToProvider(client) {
     name: chain.name,
     ensAddress: chain.contracts?.ensRegistry?.address,
   };
-  if (transport.type === 'fallback') {
+  if (transport.type === "fallback") {
     const providers = transport.transports.map(
-      ({ value }) => new JsonRpcProvider(value?.url, network),
+      ({ value }) => new JsonRpcProvider(value?.url, network)
     );
     if (providers.length === 1) return providers[0];
     return new FallbackProvider(providers);

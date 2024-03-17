@@ -2,6 +2,7 @@ import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import React, { useEffect } from "react";
 import abi from "../../contracts/abi.json";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 const JoinGame = () => {
   const { data: hash, error, isPending, writeContract } = useWriteContract();
@@ -35,20 +36,18 @@ const JoinGame = () => {
     useWaitForTransactionReceipt({
       hash,
     });
-    
+
   useEffect(() => {
     if (isConfirmed) {
       toast.success("Successfully joined the game!");
     }
   }, [isConfirmed]);
 
-  
-
   return (
     <div>
-      <button disabled={isPending} onClick={joinGame}>
+      <Button disabled={isPending} onClick={joinGame}>
         {isPending ? "Processing..." : "Join Game"}
-      </button>
+      </Button>
     </div>
   );
 };
