@@ -4,6 +4,7 @@ import { WagmiProvider } from "wagmi";
 import { defineChain } from "viem";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import Dapp from "./components/Dapp";
+import { Toaster } from "@/components/ui/sonner"
 
 require('dotenv').config();
 
@@ -37,6 +38,7 @@ export default function Home() {
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
           <Dapp />
+          <Toaster />
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

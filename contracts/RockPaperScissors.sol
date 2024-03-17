@@ -47,8 +47,8 @@ contract RockPaperScissors {
         emit PlayerJoined(_gameId, msg.sender);
     }
 
-    function makeMove(bytes calldata encryptedMove) external {
-        Game storage game = games[0];
+    function makeMove(uint256 _gameId, bytes calldata encryptedMove) external {
+        Game storage game = games[_gameId];
 
         require(!game.isGameEnded, "Game has already ended");
         euint8 move = FHE.asEuint8(encryptedMove);
@@ -61,8 +61,8 @@ contract RockPaperScissors {
             revert("Player not part of this game");
         }
 
-        emit MoveMade(0, msg.sender, move);
-        decideWinner(0);
+        emit MoveMade(_gameId, msg.sender, move);
+        decideWinner(_gameId);
     }
 
     function decideWinner(uint256 _gameId) internal {

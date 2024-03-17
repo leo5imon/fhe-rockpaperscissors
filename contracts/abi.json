@@ -66,6 +66,11 @@
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "_gameId",
+				"type": "uint256"
+			},
+			{
 				"internalType": "bytes",
 				"name": "encryptedMove",
 				"type": "bytes"
