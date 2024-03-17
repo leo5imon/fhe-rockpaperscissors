@@ -47,7 +47,7 @@ contract RockPaperScissors {
         emit PlayerJoined(_gameId, msg.sender);
     }
 
-    function makeMove(bytes calldata encryptedMove) public {
+    function makeMove(bytes calldata encryptedMove) external {
         Game storage game = games[0];
 
         require(!game.isGameEnded, "Game has already ended");

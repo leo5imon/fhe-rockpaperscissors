@@ -3,8 +3,8 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { FhenixClient } from "fhenixjs";
 import { useEthersProvider } from "../components/useEthersProvider";
 import CreateGame from "./createGame";
-import JoinGame from './joinGame';
-import MakeMove from './makeMove';
+import JoinGame from "./joinGame";
+import MakeMove from "./makeMove";
 
 const Dapp = () => {
   const provider = useEthersProvider({ chainId: 42069 });

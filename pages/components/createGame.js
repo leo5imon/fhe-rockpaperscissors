@@ -6,7 +6,7 @@ const CreateGame = () => {
 
   async function createGame() {
     writeContract({
-      address: "0x2dcc1128351d6ec9C7f911b2D982eE4C1883Bb45",
+      address: process.env.NEXT_PUBLIC_RPS_CONTRACT_ADDRESS,
       abi,
       functionName: "createGame",
     });

@@ -6,10 +6,10 @@ const JoinGame = () => {
 
   async function joinGame() {
     writeContract({
-      address: "0x49ac3451359A4305Ac3f37129DBA13F4e1Ac2b34",
+      address: process.env.NEXT_PUBLIC_RPS_CONTRACT_ADDRESS,
       abi,
       functionName: "joinGame",
-      args: [0], 
+      args: [0],
     });
   }
 
