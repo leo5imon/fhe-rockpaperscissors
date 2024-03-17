@@ -1,11 +1,17 @@
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import abi from "../../contracts/abi.json";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input"
+import styles from "./JoinGame.module.css";
+import { useGame } from '../contexts/GameContext'; 
 
 const JoinGame = () => {
+  const [idValue, setIdValue] = useState("");
+  const { setGameId } = useGame();
   const { data: hash, error, isPending, writeContract } = useWriteContract();
+  const validId = /^\d+$/.test(idValue);
 
   async function joinGame() {
     try {
@@ -14,7 +20,7 @@ const JoinGame = () => {
         address: process.env.NEXT_PUBLIC_RPS_CONTRACT_ADDRESS,
         abi,
         functionName: "joinGame",
-        args: [0],
+        args: [idValue],
       });
     } catch (e) {
       toast.error(`Error initiating join game transaction: ${e.message}`);
@@ -40,16 +46,23 @@ const JoinGame = () => {
   useEffect(() => {
     if (isConfirmed) {
       toast.success("Successfully joined the game!");
+      setGameId(idValue);
     }
-  }, [isConfirmed]);
+  }, [isConfirmed, idValue, setGameId]);
 
   return (
-    <div>
-      <Button disabled={isPending} onClick={joinGame}>
+    <div className={styles.joinGameContainer}>
+      <Input
+        type="text"
+        id="id"
+        placeholder="Id"
+        value={idValue}
+        onChange={(e) => setIdValue(e.target.value)}
+      />
+      <Button disabled={isPending || !validId} onClick={joinGame}>
         {isPending ? "Processing..." : "Join Game"}
       </Button>
     </div>
   );
 };
-
 export default JoinGame;

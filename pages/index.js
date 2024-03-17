@@ -5,6 +5,7 @@ import { defineChain } from "viem";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import Dapp from "./components/Dapp";
 import { Toaster } from "@/components/ui/sonner";
+import { GameProvider } from './contexts/GameContext';
 
 require("dotenv").config();
 
@@ -37,8 +38,10 @@ export default function Home() {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          <Dapp />
-          <Toaster />
+          <GameProvider>
+            <Dapp />
+            <Toaster />
+          </GameProvider>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

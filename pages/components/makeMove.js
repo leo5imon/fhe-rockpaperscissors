@@ -5,12 +5,17 @@ import { toHex } from "viem";
 import { toast } from "sonner";
 import Image from 'next/image';
 import styles from './MakeMove.module.css';
+import { useGame } from '../contexts/GameContext'; 
 
 const MakeMove = ({ fhenixClient }) => {
+  const { gameId } = useGame();
   const { data: hash, error, isPending, writeContract } = useWriteContract();
 
   async function handleMove(move) {
-    const gameId = 0;
+    if (!gameId) {
+      console.error("Game ID is not set");
+      return;
+    }
     try {
       const encryptedMove = await fhenixClient.encrypt_uint8(move);
       const encryptedMoveHex = toHex(encryptedMove.data);

@@ -3,13 +3,16 @@ import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import abi from "../../contracts/abi.json";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button"
+import styles from "./CreateGame.module.css";
+import { useGame } from '../contexts/GameContext'; 
+import { useTransactionReceipt } from 'wagmi'
 
 const CreateGame = () => {
-  const { data: hash, error, isPending, writeContract } = useWriteContract();
+  const { data: hash, error, transactionReceipt, isPending, writeContract } = useWriteContract();
 
   async function createGame() {
     try {
-      toast.info("Initiating game creation...");
+      toast.info("Creating game...");
       writeContract({
         address: process.env.NEXT_PUBLIC_RPS_CONTRACT_ADDRESS,
         abi,
@@ -33,7 +36,7 @@ const CreateGame = () => {
     useWaitForTransactionReceipt({
       hash
     });
-
+    
   useEffect(() => {
     if (isConfirmed) {
       toast.success("Your game ID is : ");
@@ -41,7 +44,7 @@ const CreateGame = () => {
   }, [isConfirmed]);
 
   return (
-    <div>
+    <div className={styles.createGameContainer}>
       <Button disabled={isPending} onClick={createGame}>
         {isPending ? "Processing..." : "Create Game"}
       </Button>
