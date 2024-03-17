@@ -6,7 +6,7 @@ const JoinGame = () => {
 
   async function joinGame() {
     writeContract({
-      address: "0x2dcc1128351d6ec9C7f911b2D982eE4C1883Bb45",
+      address: "0x49ac3451359A4305Ac3f37129DBA13F4e1Ac2b34",
       abi,
       functionName: "joinGame",
       args: [0], 

@@ -66,16 +66,9 @@
 	{
 		"inputs": [
 			{
-				"components": [
-					{
-						"internalType": "bytes",
-						"name": "data",
-						"type": "bytes"
-					}
-				],
-				"internalType": "struct inEuint8",
+				"internalType": "bytes",
 				"name": "encryptedMove",
-				"type": "tuple"
+				"type": "bytes"
 			}
 		],
 		"name": "makeMove",

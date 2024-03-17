@@ -1,21 +1,22 @@
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import abi from "../../contracts/abi.json";
+import { isBytes, isHex, toHex, toBytes } from "viem";
+import { useAccount } from 'wagmi'
 
 const MakeMove = ({ fhenixClient }) => {
   const { data: hash, error, isPending, writeContract } = useWriteContract();
 
   async function makeMove() {
-
     const gameId = 0;
-    const encryptedAmount = await fhenixClient.encrypt_uint8(3);
-    const hexEncryptedAmount = encryptedAmount.data;
-
-    console.log(hexEncryptedAmount);
+    const encryptedValue = await fhenixClient.encrypt_uint8(3);
+    const encryptedMoveHex = toBytes(encryptedValue.data);
+    
+    console.log(encryptedMoveHex);
     writeContract({
-      address: "0x2dcc1128351d6ec9C7f911b2D982eE4C1883Bb45",
+      address: "0x2E309f9C8A707C1d9840dde8d3d00Fffd0be4e33",
       abi,
       functionName: "makeMove",
-      args: [hexEncryptedAmount],
+      args: [`0x${encryptedMoveHex}`],
     });
   }
 
@@ -37,4 +38,4 @@ const MakeMove = ({ fhenixClient }) => {
   );
 };
 
-export default MakeMove;
+export default MakeMove

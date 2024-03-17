@@ -6,7 +6,7 @@ const CreateGame = () => {
 
   async function createGame() {
     writeContract({
-      address: "0x123667758b62dc474F590a1A065e54E734e2b9DC",
+      address: "0x2dcc1128351d6ec9C7f911b2D982eE4C1883Bb45",
       abi,
       functionName: "createGame",
     });
